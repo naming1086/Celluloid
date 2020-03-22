@@ -19,29 +19,32 @@ endif()
 # use unicode in projects		
 add_definitions(-DUNICODE -D_UNICODE)
 
-#set(thirdPartyPath "${CMAKE_SOURCE_DIR}/ThirdParty")
+set(libPath "${CMAKE_SOURCE_DIR}/Libs")
 
 # include directories
-include_directories("common")
-#include_directories("ThirdParty/fbxsdk/include")
+include_directories("Common")
+include_directories("Assets")
 #include_directories("$ENV{DXSDK_DIR}Include")
 
 # source files
-set(srcs Source/TestDemo.h
-         Source/TestDemo.cpp
-         Source/main.cpp 
-		 Common/Demo.h
-         Common/Demo.cpp
-         Common/Shader.h
-         Common/Shader.cpp
+set(srcs Common/d3dx12.h
+         Common/DXSample.cpp
+         Common/DXSample.h 
+		 Common/DXSampleHelper.h
+         Common/stdafx.h
+         Common/stdafx.cpp
          Common/Application.h
 		 Common/Application.cpp
+		 Source/main.cpp
+		 Source/Celluoid.h
+		 Source/Celluoid.cpp
 		 )	
 	 	 
 # add referenced library		 
 set(libs dxguid
          dxgi
 		 d3d12
+		 dxcompiler
 		 d3dcompiler)
 
 if(CMAKE_SIZEOF_VOID_P)
@@ -50,7 +53,7 @@ else(CMAKE_SIZEOF_VOID_P)
     set(platform x86)
 endif(CMAKE_SIZEOF_VOID_P)	 
 
-#link_directories("$ENV{DXSDK_DIR}Lib/${platform}/")
+link_directories("${libPath}")
 #link_directories("${thirdPartyPath}/fbxsdk/lib/vs2015/${platform}/")
 
 add_executable(Celluoid "${srcs}")
@@ -58,7 +61,6 @@ target_link_libraries(Celluoid "${libs}")
 # working directories
 set_target_properties(Celluoid PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Assets")
 set_target_properties(Celluoid PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
-
 
 
 

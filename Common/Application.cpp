@@ -1,12 +1,27 @@
-#include "Application.h"
-#include <wrl.h>
+//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
 
-using namespace Microsoft::WRL;
+#include "stdafx.h"
+#include "Application.h"
 
 HWND Application::m_hwnd = nullptr;
 
-int Application::Run(Demo* pSample, HINSTANCE hInstance, int nCmdShow)
+int Application::Run(DXSample* pSample, HINSTANCE hInstance, int nCmdShow)
 {
+	// Parse the command line parameters
+	int argc;
+	LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	pSample->ParseCommandLineArgs(argv, argc);
+	LocalFree(argv);
+
 	// Initialize the window class.
 	WNDCLASSEX windowClass = { 0 };
 	windowClass.cbSize = sizeof(WNDCLASSEX);
@@ -60,37 +75,37 @@ int Application::Run(Demo* pSample, HINSTANCE hInstance, int nCmdShow)
 // Main message handler for the sample.
 LRESULT CALLBACK Application::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	Demo* demo = reinterpret_cast<Demo*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	DXSample* pSample = reinterpret_cast<DXSample*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
 	switch (message)
 	{
 	case WM_CREATE:
-	{
-		// Save the DXSample* passed in to CreateWindow.
-		LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
-	}
-	return 0;
+		{
+			// Save the DXSample* passed in to CreateWindow.
+			LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+			SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+		}
+		return 0;
 
 	case WM_KEYDOWN:
-		if (demo)
+		if (pSample)
 		{
-			demo->OnKeyDown(static_cast<UINT8>(wParam));
+			pSample->OnKeyDown(static_cast<UINT8>(wParam));
 		}
 		return 0;
 
 	case WM_KEYUP:
-		if (demo)
+		if (pSample)
 		{
-			demo->OnKeyUp(static_cast<UINT8>(wParam));
+			pSample->OnKeyUp(static_cast<UINT8>(wParam));
 		}
 		return 0;
 
 	case WM_PAINT:
-		if (demo)
+		if (pSample)
 		{
-			demo->OnUpdate();
-			demo->OnRender();
+			pSample->OnUpdate();
+			pSample->OnRender();
 		}
 		return 0;
 

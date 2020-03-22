@@ -1,9 +1,19 @@
-#include "Application.h"
-#include "TestDemo.h"
+//*********************************************************
+//
+// Copyright (c) Microsoft. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY
+// IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR
+// PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
+//
+//*********************************************************
 
+#include "stdafx.h"
+#include "Celluoid.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow)
 {
-	TestDemo sample(1280, 720, L"Test Case");
-	return Application::Run(&sample, hInstance, nCmdShow);
+	Demo demo(1280, 720, L"Cel Shading");
+	return Application::Run(&demo, hInstance, nCmdShow);
 }
